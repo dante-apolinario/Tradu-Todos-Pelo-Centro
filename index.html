@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todos Pelo Centro</title>
+    <style>
+        /* Modo Escuro Total e Centralização */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+
+        /* O Botão Vermelho */
+        .red-button {
+            background-color: #ff3b30;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 220px;
+            height: 220px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(255, 59, 48, 0.4);
+            transition: transform 0.1s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+            text-transform: uppercase;
+            outline: none;
+            user-select: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Efeitos de Hover e Clique */
+        .red-button:hover {
+            background-color: #ff453a;
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(255, 59, 48, 0.6);
+        }
+
+        .red-button:active {
+            transform: scale(0.95);
+            box-shadow: 0 5px 15px rgba(255, 59, 48, 0.3);
+        }
+
+        /* Indicador do idioma atual no rodapé */
+        .lang-indicator {
+            position: absolute;
+            bottom: 40px;
+            color: #555;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            min-height: 24px;
+            text-align: center;
+            max-width: 90%;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="red-button" id="btnCentro">PRESSIONE</button>
+    <div class="lang-indicator" id="langIndicator"></div>
+
+    <script>
+        // Uma das maiores listas possíveis de traduções para "Todos Pelo Centro"
+        const translations = [
+            { text: "Todos pelo Centro", lang: "pt-BR", name: "Português (Brasil)" },
+            { text: "Todos pelo Centro", lang: "pt-PT", name: "Português (Portugal)" },
+            { text: "All for the Center", lang: "en-US", name: "Inglês (EUA)" },
+            { text: "All for the Centre", lang: "en-GB", name: "Inglês (Reino Unido)" },
+            { text: "Todos por el Centro", lang: "es-ES", name: "Espanhol" },
+            { text: "Tous pour le Centre", lang: "fr-FR", name: "Francês" },
+            { text: "Alle für das Zentrum", lang: "de-DE", name: "Alemão" },
+            { text: "Tutti per il Centro", lang: "it-IT", name: "Italiano" },
+            { text: "Alles voor het Centrum", lang: "nl-NL", name: "Holandês" },
+            { text: "Все за Центр", lang: "ru-RU", name: "Russo" },
+            { text: "すべてはセンターのために", lang: "ja-JP", name: "Japonês" },
+            { text: "一切为了中心", lang: "zh-CN", name: "Chinês (Simplificado)" },
+            { text: "一切為了中心", lang: "zh-TW", name: "Chinês (Tradicional)" },
+            { text: "모두 센터를 위해", lang: "ko-KR", name: "Coreano" },
+            { text: "الجميع من أجل المركز", lang: "ar-SA", name: "Árabe" },
+            { text: "सभी केंद्र के लिए", lang: "hi-IN", name: "Híndi" },
+            { text: "Hepimiz Merkez İçin", lang: "tr-TR", name: "Turco" },
+            { text: "Όλοι για το Κέντρο", lang: "el-GR", name: "Grego" },
+            { text: "Wszyscy dla Centrum", lang: "pl-PL", name: "Polonês" },
+            { text: "Tots pel Centre", lang: "ca-ES", name: "Catalão" },
+            { text: "Alt for Centeret", lang: "da-DK", name: "Dinamarquês" },
+            { text: "Alla för Centret", lang: "sv-SE", name: "Sueco" },
+            { text: "Alt for Sentrum", lang: "no-NO", name: "Norueguês" },
+            { text: "Kaikki keskustan puolesta", lang: "fi-FI", name: "Finlandês" },
+            { text: "Všichni pro centrum", lang: "cs-CZ", name: "Tcheco" },
+            { text: "Mindenki a Központért", lang: "hu-HU", name: "Húngaro" },
+            { text: "Toţi para Centru", lang: "ro-RO", name: "Romeno" },
+            { text: "Všetci pre Centrum", lang: "sk-SK", name: "Eslovaco" },
+            { text: "Semua untuk Pusat", lang: "id-ID", name: "Indonésio" },
+            { text: "Semua untuk Pusat", lang: "ms-MY", name: "Malaio" },
+            { text: "Lahat para sa Sentro", lang: "fil-PH", name: "Filipino" },
+            { text: "Dành cho Trung tâm", lang: "vi-VN", name: "Vietnamita" },
+            { text: "ทุกคนเพื่อศูนย์กลาง", lang: "th-TH", name: "Tailandês" },
+            { text: "Omnes pro Centro", lang: "la", name: "Latim" },
+            { text: "Visi už Centrą", lang: "lt-LT", name: "Lituano" },
+            { text: "Visi Centram", lang: "lv-LV", name: "Letão" },
+            { text: "Kõik Keskuse heaks", lang: "et-EE", name: "Estoniano" },
+            { text: "Всички за Центъра", lang: "bg-BG", name: "Búlgaro" },
+            { text: "Svi za Centar", lang: "hr-HR", name: "Croadia / Sérvio" },
+            { text: "Vsi za Center", lang: "sl-SI", name: "Esloveno" },
+            { text: "Всі за Центр", lang: "uk-UA", name: "Ucraniano" },
+            { text: "כgroup עבור המרכז", lang: "he-IL", name: "Hebraico" },
+            { text: "همه برای مرکز", lang: "fa-IR", name: "Persa" },
+            { text: "Tots polo Centro", lang: "gl-ES", name: "Galego" },
+            { text: "Guztiak Zentroaren alde", lang: "eu-ES", name: "Basco" },
+            { text: "Cuid a lár", lang: "ga-IE", name: "Irlandês" },
+            { text: "Popeth ar gyfer y Ganolfan", lang: "cy-GB", name: "Galês" },
+            { text: "A h-uile càil airson an Ionaid", lang: "gd-GB", name: "Gaélico Escocês" },
+            { text: "Chun a h-uile duine sa Lár", lang: "ga-IE", name: "Irlandês Moderno" },
+            { text: "Allir fyrir Miðjuna", lang: "is-IS", name: "Islandês" },
+            { text: "Tuti por la Centro", lang: "eo", name: "Esperanto" },
+            { text: "Totu pro su Tzentru", lang: "sc", name: "Sardo" },
+            { text: "Tot pro lo Centro", lang: "frp", name: "Arpitan" },
+            { text: "Munu gbe fún Gbùngbùn", lang: "yo-NG", name: "Yorubá" },
+            { text: "Kama tọn na Taten", lang: "fon", name: "Fon" },
+            { text: "Bafetše bohle bakeng sa Senthara", lang: "st", name: "Soto do Sul" },
+            { text: "Kwonke kwa Sentra", lang: "xh", name: "Xhosa" },
+            { text: "Konke kuseMndenini", lang: "zu", name: "Zulu" },
+            { text: "Tsetse tsetse pa Pakati", lang: "ny", name: "Chichewa" },
+            { text: "Mwayi wonse ku Malo a Pakati", lang: "ny-MW", name: "Nianja" },
+            { text: "Nyika yose kuMuzinda", lang: "sn", name: "Shona" },
+            { text: "Tout pou Sant la", lang: "ht-HT", name: "Crioulo Haitiano" },
+            { text: "Tudo pa Centru", lang: "kea", name: "Crioulo de Cabo Verde" },
+            { text: "Bila shaka kwa Kituo", lang: "sw-KE", name: "Suaíli" },
+            { text: "Onyé kọrọ maka Etítì", lang: "ig-NG", name: "Ibo" },
+            { text: "Duk don Tsakiya", lang: "ha-NG", name: "Hausa" },
+            { text: "Hama ji bo Navendê", lang: "ku-TR", name: "Curdo" },
+            { text: "Կենտրոնի համար բոլորը", lang: "hy-AM", name: "Armênio" },
+            { text: "ყველაფერი ცენტრისთვის", lang: "ka-GE", name: "Georgiano" },
+            { text: "Hər kəs Mərkəz üçün", lang: "az-AZ", name: "Azerbaijano" },
+            { text: "Барлығы Орталық үшін", lang: "kk-KZ", name: "Cazaque" },
+            { text: "Баары Борбор үчүн", lang: "ky-KG", name: "Quirguiz" },
+            { text: "Ҳама барои Марказ", lang: "tg-TJ", name: "Tajique" },
+            { text: "Ҳамма Марказ учун", lang: "uz-UZ", name: "Uzbeque" },
+            { text: "Хамаг нь Төвийн төлөө", lang: "mn-MN", name: "Mongol" },
+            { text: "ဩားလုံး ဗဟိုအတွက်", lang: "my-MM", name: "Birmanês" },
+            { text: "အားလုံး ဗဟိုအတွက်", lang: "my", name: "Myanmar" },
+            { text: "ທຸກຢ່າງເພື່ອສູນກາງ", lang: "lo-LA", name: "Laosiano" },
+            { text: "ទាំងអស់គ្នាសម្រាប់មជ្ឈមណ្ឌល", lang: "km-KH", name: "Camboajano (Khmer)" },
+            { text: "මධ්යස්ථානය සඳහා සියල්ල", lang: "si-LK", name: "Cingalês" },
+            { text: "எல்லாம் மையத்திற்காக", lang: "ta-IN", name: "Tâmil" },
+            { text: "అన్నీ కేంద్రం కోసమే", lang: "te-IN", name: "Telugo" },
+            { text: "ಎಲ್ಲವೂ ಕೇಂದ್ರಕ್ಕಾಗಿ", lang: "kn-IN", name: "Canarim" },
+            { text: "എല്ലാം കേന്ദ്രത്തിന് വേണ്ടി", lang: "ml-IN", name: "Malaialam" },
+            { text: "ସମସ୍ତେ କେନ୍ଦ୍ର ପାଇଁ", lang: "or-IN", name: "Odia" },
+            { text: "সব কেন্দ্রের জন্য", lang: "bn-BD", name: "Bengali" },
+            { text: "ਸਭ ਕੁਝ ਕੇਂਦਰ ਲਈ", lang: "pa-IN", name: "Punjabi" },
+            { text: "બધા કેન્દ્ર માટે", lang: "gu-IN", name: "Gujarati" },
+            { text: "सर्व केंद्रासाठी", lang: "mr-IN", name: "Marathi" },
+            { text: "सबै केन्द्रका लागि", lang: "ne-NP", name: "Nepalês" },
+            { text: "سب کچھ مرکز کے لیے", lang: "ur-PK", name: "Urdu" },
+            { text: "کُل مرکز خٲطرہ", lang: "ks", name: "Caxemira" },
+            { text: "ސެންޓަރަށްޓަކައި ހުރިހާ އެއްޗެއް", lang: "dv", name: "Divehi" },
+            { text: "Samoan mo le Nofoaga Tutotonu", lang: "sm", name: "Samoano" },
+            { text: "Te katoa mo te Pokapū", lang: "mi-NZ", name: "Maori" },
+            { text: "Koto pina ki te Pokapu", lang: "rar", name: "Cook Islands Maori" },
+            { text: "Kotoa ki te Loto", lang: "to", name: "Tonganês" },
+            { text: "Soli taucoko ki loma", lang: "fj", name: "Fijiano" },
+            { text: "Sollus por o Centro", lang: "ast-ES", name: "Asturiano" },
+            { text: "Kha makh d-merkhaza", lang: "syr", name: "Siríaco" },
+            { text: "Sa d'o tsentru", lang: "co", name: "Córsego" },
+            { text: "Tut por l'Zentr", lang: "wa", name: "Valão" }
+        ];
+
+        const button = document.getElementById('btnCentro');
+        const indicator = document.getElementById('langIndicator');
+
+        button.addEventListener('click', () => {
+            // Escolhe uma tradução aleatória da lista gigante
+            const randomChoice = translations[Math.floor(Math.random() * translations.length)];
+            
+            // Cancela vozes tocando no momento (evita sobreposição)
+            window.speechSynthesis.cancel();
+
+            // Configura o motor de fala do navegador
+            const utterance = new SpeechSynthesisUtterance(randomChoice.text);
+            utterance.lang = randomChoice.lang;
+
+            // Busca as vozes instaladas no seu dispositivo
+            const voices = window.speechSynthesis.getVoices();
+            
+            // Tenta encontrar a voz mais próxima do idioma
+            const matchingVoice = voices.find(voice => 
+                voice.lang.toLowerCase() === randomChoice.lang.toLowerCase() || 
+                voice.lang.toLowerCase().startsWith(randomChoice.lang.toLowerCase().split('-')[0])
+            );
+            
+            if (matchingVoice) {
+                utterance.voice = matchingVoice;
+            }
+
+            // Fala a frase!
+            window.speechSynthesis.speak(utterance);
+
+            // Mostra o idioma e o texto falado na tela
+            indicator.innerHTML = `<strong>"${randomChoice.text}"</strong><br>Idioma: ${randomChoice.name} (${randomChoice.lang})`;
+            indicator.style.color = '#ff3b30';
+            
+            // Reseta a cor de volta ao cinza sutil após 2 segundos
+            setTimeout(() => {
+                indicator.style.color = '#555';
+            }, 2000);
+        });
+
+        // Evento crítico para carregar vozes em navegadores baseados em Chromium/Chrome
+        if (typeof speechSynthesis !== 'undefined' && speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = () => {
+                speechSynthesis.getVoices();
+            };
+        }
+    </script>
+</body>
+</html>
