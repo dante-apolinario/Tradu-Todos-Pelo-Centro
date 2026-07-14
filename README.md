@@ -1,0 +1,1 @@
+# Tradu-Todos-Pelo-Centro
